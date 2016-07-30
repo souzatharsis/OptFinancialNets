@@ -1,5 +1,5 @@
 initialiseSettingsStrategy <- function(rebalanceFrequency     = 5,
-                                       inSample               = 100,
+                                       inSample               = 500,
                                        tradeOnFutures         = 1,
                                        tradeOnCashAsset       = 1,
                                        gearing                = 1,
