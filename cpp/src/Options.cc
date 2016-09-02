@@ -61,7 +61,7 @@ void Options::assignDefaultValues() {
     inputFile = "";
 
     vector<string> modelValues;
-    modelValues.push_back("mtc_assort");
+    modelValues.push_back("assort_mst");
 
     vector<string> solverValues;
     solverValues.push_back("cplex");
@@ -76,7 +76,7 @@ void Options::assignDefaultValues() {
     options.push_back(new BoolOption("export_model", "If (1) exports model to lp file", 0, 0));
     
     // General options
-    options.push_back(new StringOption("model",     "Choose which model to solve (default: mtc_assort)", 1, "mtc_assort", modelValues));
+    options.push_back(new StringOption("model",     "Choose which model to solve (default: assort_mst)", 1, "assort_mst", modelValues));
     options.push_back(new StringOption("output",    "Output file where solution will be written", 0, "", empty));
     
     options.push_back(new DoubleOption("cuts_tolerance",      "Tolerance level when adding violated cuts [default: 1e-7]", 1, 1e-7, dmax, 0));
@@ -304,6 +304,7 @@ void Options::print() {
         if (debug <= 2 || modified)
             printf("\n");
 
+        printf("---------\n");
     }
 
 }
