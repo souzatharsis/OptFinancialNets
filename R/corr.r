@@ -7,6 +7,7 @@ finalDate   = 20160105;  # initial date, YYYYMMDD
 inSample               = 500; # Number of in-sample days
 limitNumberOfCompanies = 20;
 tradeOnCashAsset       = 0;
+tradeOnFutures         = 0;
 
 # Load package
 script.dir <- dirname(sys.frame(1)$ofile);
@@ -20,6 +21,7 @@ settingsTrading = initialiseSettingsTrading(index       = index,
 
 settingsStrategy = initialiseSettingsStrategy(inSample               = inSample,
                                               tradeOnCashAsset       = tradeOnCashAsset,
+                                              tradeOnFutures         = tradeOnFutures,
                                               limitNumberOfCompanies = limitNumberOfCompanies);
 
 createCorrelationFile(settingsTrading  = settingsTrading,

@@ -126,6 +126,8 @@ class Util {
 
         static void printGraph(const vector<vector<int>> &graph);
         static void printGraph(const vector<vector<double>> &graph, int dec = 2);
+        
+        static void printDiagonalDoubleMatrix(const vector<vector<double>> &graph, int tot = 5, int dec = 2);
  
         static void printFileIntVector(FILE* file, const vector<int> &vec, int numPerLine = 0);
         static void printFileUnsignedVector(FILE* file, const vector<unsigned> &vec, int numPerLine = 0);

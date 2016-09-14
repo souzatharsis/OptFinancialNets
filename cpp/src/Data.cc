@@ -12,36 +12,39 @@
 
 Data::Data() {
     numAssets = 0;
+
 }
 
 Data::~Data() {
 }
 
 void Data::readData() {
-    /*
+    string inputFile = Options::getInstance()->getInputFile();
+
+    printf("File: %s\n", inputFile.c_str());
+
+    // Correlation is a diagonal matrix (N assets from 0 to N-1)
+    // Asset 0  : from (0 to N-2) represents assets (1 to N-1)
+    // Asset 1  : from (0 to N-3) represents assets (2 to N-1)
+    // Asset 2  : from (0 to N-4) represents assets (3 to N-1)
+    // ...
+    // Asset N-2: from (0 to 1) represents (N-2 to N-1) assets
+    // Asset N-1: from (0 to 0) represents (N-1 to N-1) assets
+
     FILE* file;
-    string inputFile = Options::getInstance()->getStringOption("products_file");
  
     if (!Util::openFile(&file, inputFile.c_str(), "r")) 
-        Util::throwInvalidArgument("Error: Products file '%s' was not found or could not be opened.", inputFile.c_str());
+        Util::throwInvalidArgument("Error: Input file '%s' was not found or could not be opened.", inputFile.c_str());
 
     try {
-        if (fscanf(file, "%d", &numProducts) != 1) throw std::invalid_argument("");
-    
-        char buffer[100];
-        if (fscanf(file, "%s", buffer) != 1) throw std::invalid_argument("");
-        if (fscanf(file, "%s", buffer) != 1) throw std::invalid_argument("");
-    
-        for (int i = 0; i < numProducts; i++) {
-            int prod;
-            int loc;
-            if (fscanf(file, "%d", &prod) != 1) throw std::invalid_argument("");
-            if (fscanf(file, "%d", &loc)  != 1) throw std::invalid_argument("");
-
-            locations[loc]         = prod;
-            vertices[locationsToVertices[loc]].push_back(prod);
-            productsVertex[prod]   = locationsToVertices[loc];
-            productsLocation[prod] = loc;
+        if (fscanf(file, "%d", &numAssets) != 1) throw std::invalid_argument("");
+        correlation.resize(numAssets-1); 
+        for (int i = 0; i < numAssets-1; i++) {
+            for (int j = i+1; j < numAssets; j++) {
+                float corr;
+                if (fscanf(file, "%f", &corr) != 1) throw std::invalid_argument("");
+                correlation[i].push_back(corr);
+            }
         }
     
     } catch ( const std::invalid_argument& e) {
@@ -49,7 +52,8 @@ void Data::readData() {
         Util::throwInvalidArgument("Error: Products file '%s' is invalid.", inputFile.c_str());
     }
     if (!Util::closeFile(&file)) Util::throwInvalidArgument("Error: Products file %s could not be closed.", inputFile.c_str());
-    */
+
+    Util::printDiagonalDoubleMatrix(correlation);
 }
 
 double Data::getCorrelation(int i, int j) const {

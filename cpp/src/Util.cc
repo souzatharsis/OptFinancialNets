@@ -295,6 +295,26 @@ void Util::printDoubleMatrix(const vector<vector<double> > &vec, int tot, int de
     }
 }
 
+void Util::printDiagonalDoubleMatrix(const vector<vector<double> > &vec, int tot, int dec) {
+    for (unsigned i = 1; i < vec.size(); i++) {
+        if (vec[i].size() != vec[i-1].size()-1) throw std::invalid_argument("Tryig to print matrix that is not diagonal");
+    }
+    if (vec[vec.size()-1].size() != 1) throw std::invalid_argument("Tryig to print matrix that is not diagonal");
+    
+    int digits = numDigits(vec.size());
+    printf("%*s", digits, "");
+    for (unsigned i = 0; i < vec.size(); i++) printf(" %*d", tot, i+1);
+    printf("\n");
+    
+    for (unsigned i = 0; i < vec.size(); i++) {
+        printf("%-*d", digits, i);
+        for (unsigned j = 0; j < i; j++) printf(" %*s", tot, "");
+        for (unsigned j = i+1; j <= vec.size(); j++) printf(" %*.*f", tot, dec, vec[i][j - i - 1]);
+        printf("\n");
+    }
+}
+
+
 void Util::printGraph(const vector<vector<int>> &graph) {
     int digits = numDigits(graph.size());
     for (int i = 0; i < (int) graph.size(); i++) {
