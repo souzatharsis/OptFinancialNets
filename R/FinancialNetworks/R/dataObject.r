@@ -153,7 +153,6 @@ DataObject <- setRefClass("DataObject",
 loadBasicData = function(db) {
 
     
-    liveRun = 0;
     liveDate = 0;
     if (actualInitialDate == actualFinalDate) {
         if (actualInitialDate == 0) {
@@ -164,7 +163,6 @@ loadBasicData = function(db) {
         } else {
             liveDate = actualInitialDate;
         }
-        liveRun = 1;
     }
 
 
@@ -255,58 +253,6 @@ loadBasicData = function(db) {
         open         <<- cbind(indexOpen, open);
     }
 
-    ## ADAPTATIONS FOR LIVE RUN
-    ## THIS TRIES TO LOAD CURRENT PRICES FROM FTP
-    if (liveRun) {
-        res = .readLivePricesFromFTP(settingsFTP, settingsTrading$index, companiesIds, liveDate=liveDate);
-        
-        if (res$date != 0) {
-            if (res$indexPrice == 0) res$indexPrice = indexPrices[numDates];
-
-            for (i in 1 : ncol(prices)) {
-                if (res$prices[i] == 0) res$prices[i] = prices[numDates, i];
-            }
-            #printf("\nBefore reading current prices\n");
-            #print(indexPrices[(numDates-2):numDates]);
-            #print(dates[(numDates-2):numDates]);
-            #print(prices[(numDates-2):numDates, ]);
-
-            if (dates[numDates] < res$date) {
-                prices <<- rbind(prices, res$prices);
-                high   <<- rbind(high,   res$prices);
-                low    <<- rbind(low,    res$prices);
-                open   <<- rbind(open,   res$prices);
-                indexPrices <<- c(indexPrices, res$indexPrice);
-                indexHigh   <<- c(indexHigh  , res$indexPrice);
-                indexOpen   <<- c(indexOpen  , res$indexPrice);
-                indexLow    <<- c(indexLow   , res$indexPrice);
-                numDates <<- numDates + 1;
-                dates <<- c(dates, res$date);
-                settingsTrading$setDates(dates[numDates], dates[numDates]);
-                actualFinalDate <<- dates[numDates];
-                firstTrade <<- numDates;
-            } else {
-                prices[numDates, ]    <<- res$prices;
-                high  [numDates, ]    <<- res$prices;
-                low   [numDates, ]    <<- res$prices;
-                open  [numDates, ]    <<- res$prices;
-                indexPrices[numDates] <<- res$indexPrice;
-                indexHigh  [numDates] <<- res$indexPrice; 
-                indexOpen  [numDates] <<- res$indexPrice; 
-                indexLow   [numDates] <<- res$indexPrice; 
-            }
-            
-            #printf("\n");
-            #printf("After reading current prices\n");
-            #print(indexPrices[(numDates-3):numDates]);
-            #print(dates[(numDates-2):numDates]);
-            #print(prices[(numDates-2):numDates, ]);
-        }
-        
-        #print(firstTrade);
-        #print(dates);
-        #stop0("Temporary stop");
-    }
 
     if (numDates < firstTrade) stop0("Too few dates to compute results.");
 
