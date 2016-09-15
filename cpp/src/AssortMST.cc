@@ -30,6 +30,21 @@ void AssortMST::execute() {
    
     // Aqui seria executado o for pra resolver o numero
     // quadratico de problemas
+    
+    int K = Options::getInstance()->getIntOption("min_tree_size");
+
+    for (int k = K; k < data.getNumAssets();k++) {
+        for (int p = 2; p < k; p++) {
+
+        }
+    }
+    
+
+
+
+
+
+
 
     //model->execute(data);
     //model->printSolution();

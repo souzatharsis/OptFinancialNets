@@ -22,6 +22,8 @@ add_executable(${OPTFINANCIALNETS_COMPILED}
       Solver.h                Solver.cc
       CPLEX.h                 CPLEX.cc
       Model.h                 Model.cc
+      ModelAssortMST.h        ModelAssortMST.cc
+      Solution.h              Solution.cc
       AssortMST.h             AssortMST.cc
       Data.h                  Data.cc
       Util.h                  Util.cc)

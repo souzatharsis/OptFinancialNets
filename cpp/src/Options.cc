@@ -78,7 +78,13 @@ void Options::assignDefaultValues() {
     // General options
     options.push_back(new StringOption("model",     "Choose which model to solve (default: assort_mst)", 1, "assort_mst", modelValues));
     options.push_back(new StringOption("output",    "Output file where solution will be written", 0, "", empty));
+   
     
+    // Model parameters
+    options.push_back(new IntOption   ("min_tree_size", "Minimum tree size", 1, 3, imax, 3));
+
+
+
     options.push_back(new DoubleOption("cuts_tolerance",      "Tolerance level when adding violated cuts [default: 1e-7]", 1, 1e-7, dmax, 0));
 
     // Solver options 

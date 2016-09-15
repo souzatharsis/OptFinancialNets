@@ -30,7 +30,6 @@ class Data {
         int getNumAssets() const {return numAssets;};
         
         double getCorrelation(int i, int j) const;
-        double getTransformedCorrelation(int i, int j) const;
 
         void readData();
         void print();
