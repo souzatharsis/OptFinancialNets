@@ -19,6 +19,7 @@ add_executable(${OPTFINANCIALNETS_COMPILED}
       main.cc
       Option.h                Option.cc
       Options.h               Options.cc
+      AlgoUtil.h              AlgoUtil.cc
       Solver.h                Solver.cc
       CPLEX.h                 CPLEX.cc
       Model.h                 Model.cc

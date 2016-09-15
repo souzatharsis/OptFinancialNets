@@ -1,7 +1,7 @@
 /**
  * Data.cc
  *
- * Copyright(c) 2015
+ * Copyright(c) 2016
  * Cristiano Arbex Valle
  * All rights reserved.
  */

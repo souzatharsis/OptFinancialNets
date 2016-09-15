@@ -23,10 +23,9 @@ void ModelAssortMST::execute(const Data &data) {
     prepareExecution(data);
     //solver->addLazyCallback(this);
     //if (!Options::getInstance()->getBoolOption("integral_callbacks")) solver->addUserCutCallback(this);
-
-    solve();
+    //solve();
     totalTime = Util::getTime() - startTime;
-    printSolutionVariables();
+    //printSolutionVariables();
 }  
 
 
@@ -35,7 +34,8 @@ void ModelAssortMST::prepareExecution(const Data &data) {
 
 
     if (debug > 1) solver->printSolverName();
-  
+    
+    /*
     createModel(data);
     reserveSolutionSpace();
     assignWarmStart();
@@ -43,6 +43,7 @@ void ModelAssortMST::prepareExecution(const Data &data) {
  
     solver->addIncumbentCallback(this);
     solver->addNodeCallback(this);
+    */
 }
 
 

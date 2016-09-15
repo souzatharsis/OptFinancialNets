@@ -7,47 +7,43 @@
  */
 
 #include "AssortMST.h"
+#include "Data.h"
+#include "ModelAssortMST.h"
 #include "Options.h"
+#include "AlgoUtil.h"
+
 
 
 AssortMST::AssortMST() {
     totalTime = 0;
-    
-    //model = new ModelAssortMST();
-    model = new Model();
-
 }
 
 AssortMST::~AssortMST() {
-    delete(model);
 }
 
 void AssortMST::execute() {
     float startTime = Util::getTime();
 
+    Data data;
     data.readData();
     data.print();
    
     // Aqui seria executado o for pra resolver o numero
     // quadratico de problemas
-    
+
+    ModelAssortMST model;
+
     int K = Options::getInstance()->getIntOption("min_tree_size");
 
     for (int k = K; k < data.getNumAssets();k++) {
         for (int p = 2; p < k; p++) {
-
+            int smax = AlgoUtil::computeSMaxTree(k, p);
+            printf("k = %2d, p = %2d, smax = %2d\n", k, p, smax);
         }
     }
     
-
-
-
-
-
-
-
-    //model->execute(data);
-    //model->printSolution();
+    model.execute(data);
+    //model.printSolution();
  
     totalTime = Util::getTime() - startTime;
     
