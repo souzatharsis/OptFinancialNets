@@ -38,7 +38,7 @@ void AssortMST::execute() {
     for (int k = K; k < data.getNumAssets();k++) {
         for (int p = 2; p < k; p++) {
             int smax = AlgoUtil::computeSMaxTree(k, p);
-            printf("k = %2d, p = %2d, smax = %2d\n", k, p, smax);
+            if (smax > 1000) printf("k = %2d, p = %2d, smax = %2d\n", k, p, smax);
         }
     }
     

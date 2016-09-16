@@ -74,6 +74,8 @@ void Options::assignDefaultValues() {
     // Debug options
     options.push_back(new IntOption ("debug",        "Level of debug information [0-4, 0 means no debug]", 0, 0, 4, 0));
     options.push_back(new BoolOption("export_model", "If (1) exports model to lp file", 0, 0));
+    options.push_back(new BoolOption("first_node_only", "Solve only first node", 1, 0));
+
     
     // General options
     options.push_back(new StringOption("model",     "Choose which model to solve (default: assort_mst)", 1, "assort_mst", modelValues));

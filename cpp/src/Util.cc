@@ -309,7 +309,7 @@ void Util::printDiagonalDoubleMatrix(const vector<vector<double> > &vec, int tot
     for (unsigned i = 0; i < vec.size(); i++) {
         printf("%-*d", digits, i);
         for (unsigned j = 0; j < i; j++) printf(" %*s", tot, "");
-        for (unsigned j = i+1; j <= vec.size(); j++) printf(" %*.*f", tot, dec, vec[i][j - i - 1]);
+        for (unsigned j = i+1; j <= vec.size(); j++) printf(" %*.*f", tot, dec, fabs(vec[i][j - i - 1]));
         printf("\n");
     }
 }

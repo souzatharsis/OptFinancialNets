@@ -20,8 +20,13 @@ class ModelAssortMST : public Model {
         Solution solution;
 
         string x; // x variables
+        string y; // x variables
+        string z; // x variables
+        string v; // x variables
 
         int N;
+        int D;
+        int K;
 
         void assignWarmStart();
 
@@ -34,6 +39,7 @@ class ModelAssortMST : public Model {
 
         // Solution values
         vector<vector<double > > sol_x;
+        vector<double> sol_y;
  
         // Solution functions
         virtual void reserveSolutionSpace();
@@ -42,6 +48,7 @@ class ModelAssortMST : public Model {
         // Print functions
         void printSolutionVariables(int digits = 5, int decimals = 2);
         void printXSolutionVariables(int digits = 5, int decimals = 2);
+        void printYSolutionVariables(int digits = 5, int decimals = 2);
 
 
     public:
