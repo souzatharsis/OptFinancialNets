@@ -22,6 +22,18 @@ class AlgoUtil {
 
         static int computeSMaxTree(int k, int p);
 
+
+        static int isConnected(const vector<vector<int> >    &graph, 
+                               const vector<vector<double> > &distance,
+                               vector<int>                   &notConnected); 
+
+
+        // This only works properly for graphs where every edge is bidirectional
+        static int disconnectedComponents(const vector<vector<int> >    &graph, 
+                                          const vector<vector<double> > &distance,
+                                          vector<vector<int>>           &components);
+
+
 };    
 
 #endif 

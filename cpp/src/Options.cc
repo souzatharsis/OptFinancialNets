@@ -99,19 +99,19 @@ void Options::assignDefaultValues() {
     options.push_back(new IntOption   ("probing_level",      "MIP probing lebel (-1 to 3) [Default: 1]",                 1, 0, 3, -1));
    
     // Solver cuts
-    options.push_back(new IntOption  ("solver_cuts",    "All cuts are (-1) disabled, (0) automatic or (1-3) enabled            [Default: -1]", 1, -1, 3, -1));
+    options.push_back(new IntOption  ("solver_cuts",    "All cuts are (-1) disabled, (0) automatic or (1-3) enabled            [Default:  0]", 1,  0, 3, -1));
     options.push_back(new IntOption  ("cover_cuts",     "(-1 to 3) Overrides or (-2) not the option for cover cuts             [Default: -2]", 1, -2, 3, -2));
     options.push_back(new IntOption  ("landp_cuts",     "(-1 to 3) Overrides or (-2) not the option for lift-and-project cuts  [Default: -2]", 1, -2, 3, -2));
     options.push_back(new IntOption  ("gomory_cuts",    "(-1 to 2) Overrides or (-2) not the option for gomory fractional cuts [Default: -2]", 1, -2, 2, -2));
     options.push_back(new IntOption  ("mir_cuts",       "(-1 to 2) Overrides or (-2) not the option for MIR cuts               [Default: -2]", 1, -2, 2, -2));
     options.push_back(new IntOption  ("zerohalf_cuts",  "(-1 to 2) Overrides or (-2) not the option for zero-half cuts         [Default: -2]", 1, -2, 2, -2));
-    options.push_back(new IntOption  ("disj_cuts",      "(-1 to 3) Overrides or (-2) not the option for disjunctive cuts       [Default: -1]", 1, -1, 3, -2));
-    options.push_back(new IntOption  ("flowcover_cuts", "(-1 to 2) Overrides or (-2) not the option for flow cover cuts        [Default: -1]", 1, -1, 2, -2));
-    options.push_back(new IntOption  ("mcf_cuts",       "(-1 to 2) Overrides or (-2) not the option for MCF cuts               [Default: -1]", 1, -1, 2, -2));
-    options.push_back(new IntOption  ("clique_cuts",    "(-1 to 3) Overrides or (-2) not the option for cliques cuts           [Default: -1]", 1, -1, 3, -2));
-    options.push_back(new IntOption  ("flowpath_cuts",  "(-1 to 2) Overrides or (-2) not the option for flow path cuts         [Default: -1]", 1, -1, 2, -2));
-    options.push_back(new IntOption  ("gub_cuts",       "(-1 to 2) Overrides or (-2) not the option for GUB cuts               [Default: -1]", 1, -1, 2, -2));
-    options.push_back(new IntOption  ("implbd_cuts",    "(-1 to 2) Overrides or (-2) not the option for implied bound cuts     [Default: -1]", 1, -1, 2, -2));
+    options.push_back(new IntOption  ("disj_cuts",      "(-1 to 3) Overrides or (-2) not the option for disjunctive cuts       [Default: -1]", 1, -2, 3, -2));
+    options.push_back(new IntOption  ("flowcover_cuts", "(-1 to 2) Overrides or (-2) not the option for flow cover cuts        [Default: -1]", 1, -2, 2, -2));
+    options.push_back(new IntOption  ("mcf_cuts",       "(-1 to 2) Overrides or (-2) not the option for MCF cuts               [Default: -1]", 1, -2, 2, -2));
+    options.push_back(new IntOption  ("clique_cuts",    "(-1 to 3) Overrides or (-2) not the option for cliques cuts           [Default: -1]", 1, -2, 3, -2));
+    options.push_back(new IntOption  ("flowpath_cuts",  "(-1 to 2) Overrides or (-2) not the option for flow path cuts         [Default: -1]", 1, -2, 2, -2));
+    options.push_back(new IntOption  ("gub_cuts",       "(-1 to 2) Overrides or (-2) not the option for GUB cuts               [Default: -1]", 1, -2, 2, -2));
+    options.push_back(new IntOption  ("implbd_cuts",    "(-1 to 2) Overrides or (-2) not the option for implied bound cuts     [Default: -1]", 1, -2, 2, -2));
 
 
 

@@ -8,6 +8,7 @@
 
 #include "ModelAssortMST.h"
 #include "Options.h"
+#include "AlgoUtil.h"
 
 ModelAssortMST::ModelAssortMST() : Model(){
     x = "x";
@@ -30,7 +31,7 @@ void ModelAssortMST::execute(const Data &data) {
     float startTime = Util::getTime();
     prepareExecution(data);
 
-    //solver->addLazyCallback(this);
+    solver->addLazyCallback(this);
     //if (!Options::getInstance()->getBoolOption("integral_callbacks")) solver->addUserCutCallback(this);
     solve();
     totalTime = Util::getTime() - startTime;
@@ -223,6 +224,25 @@ void ModelAssortMST::createModel(const Data& data) {
         }
     }
 
+
+    // ATTEMPT TO IMPROVE y <= Sum x
+    colNames.resize(N);
+    elements.resize(N);
+    for (int i = 0; i < N; i++) {
+        colNames[0] = y + lex(i);
+        elements[0] = 1;
+        int count = 1;
+        for (int j = 0; j < N; j++) {
+            if (i == j) continue;
+            int f1 = i < j ? i : j;
+            int f2 = i < j ? j : i;
+            colNames[count  ] = x + lex(f1) + "_" + lex(f2);
+            elements[count++] = -1;
+        }
+        solver->addRow(colNames, elements, 0, 'L', "BoundOnY" + lex(i));
+    }
+
+
     // (27) x = dz
     colNames.resize(D + N - 1);
     elements.resize(D + N - 1);
@@ -263,4 +283,152 @@ void ModelAssortMST::createModel(const Data& data) {
         }
     }
  
+}
+
+
+//////////////////////////////
+//////////////////////////////
+//////////////////////////////
+//////////////////////////////
+// Cutting plane
+vector<SolverCut> ModelAssortMST::separationAlgorithm(vector<double> sol) {
+
+    
+    float startTime = Util::getTime();
+
+    callbackCalls++;
+    int callbackControl = std::numeric_limits<int>::max();
+
+    vector<SolverCut> cuts;
+
+    //if (callbackCalls != 3) return cuts;
+    
+    int integer = 1;
+    for (unsigned i = 0; i < sol.size(); i++) {
+        if (fabs(sol[i] - round(sol[i])) > TOLERANCE) {
+            integer = 0;
+            break;
+        }
+    }
+
+    if (callbackCalls > callbackControl) printf("%04d Callback (%s)\n", callbackCalls, integer ? "integer   " : "fractional");
+
+    // First thing we do: read the x values from the solution and create a directed graph where for every edge ij there is
+    // an edge ji with weights x_{ij} equal to the solution we just read.
+    //
+    // This graph will be reduced as it will contain only the necessary number of elements 
+    // (those for which at least one x_ij is different from zero), then we need to map the indices in the 
+    // reduced graph to the indices in the old graph
+    vector<double>         y_sol;
+    vector<vector<int>>    graph;
+    vector<vector<double>> x_sol;
+    vector<int>            newIndicesToOld;
+    vector<int>            oldIndicesToNew(N);
+
+    newIndicesToOld.reserve(N);
+    std::fill(oldIndicesToNew.begin(), oldIndicesToNew.end(), -1);
+    int currentIndex = 0;
+    
+    //////////////////
+    // Reading y and x
+    for (int i = 0; i < N; i++) {
+        double y_temp = sol[solver->getColIndex(y + lex(i))];
+        if (y_temp > TOLERANCE) {
+            newIndicesToOld.push_back(i);
+            y_sol.push_back(y_temp);
+            graph.push_back(vector<int>());
+            x_sol.push_back(vector<double>());
+            oldIndicesToNew[i] = currentIndex++;
+        }
+    }
+    for (int i = 0; i < (int)newIndicesToOld.size()-1; i++) {
+        int ii = newIndicesToOld[i];
+        for (int j = i+1; j < (int)newIndicesToOld.size(); j++) {
+            int jj = newIndicesToOld[j];
+
+            double x_temp = sol[solver->getColIndex(x + lex(ii) + "_" + lex(jj))];
+            if (x_temp > TOLERANCE) {
+                graph[i].push_back(j);
+                graph[j].push_back(i);
+                x_sol[i].push_back(x_temp);
+                x_sol[j].push_back(x_temp);
+            }
+        }
+    }
+    //////////////////
+    
+    //////////////////
+    // Checking for disconnected components
+    float tempTime = Util::getTime();
+    vector<vector<int>> verticesInCut;
+    int disconnectedComponents = AlgoUtil::disconnectedComponents(graph, x_sol, verticesInCut);
+    bfsTime += (Util::getTime() - tempTime);
+    //////////////////
+    
+    /*
+    printf("In solution:\n");
+    for (int i = 0; i < (int)graph.size(); i++) {
+        printf("Y %2d -> %2d, value = %.2f\n", i, newIndicesToOld[i], y_sol[i]);
+    }
+    for (int i = 0; i < (int)graph.size(); i++) {
+        printf("X %2d:", i);
+        for (int j = 0; j < (int)graph[i].size(); j++) {
+            //printf(" %d", graph[i][j]);
+            printf(" %d:%.1f", graph[i][j], x_sol[i][j]);
+        }
+        printf("\n");
+    }
+    */
+
+
+    //////////////////
+    // Adding cuts
+    if (disconnectedComponents) {
+        tempTime = Util::getTime();
+        for (int v = 0; v < (int)verticesInCut.size(); v++) {
+            
+            vector<int> W;
+            int maxYIndex =  0;
+            double maxY   = -1;
+            for (unsigned i = 0; i < verticesInCut[v].size(); i++) {
+                int ii = verticesInCut[v][i];
+                W.push_back(newIndicesToOld[ii]);
+                if (y_sol[ii] > maxY) {
+                    maxY = y_sol[ii];
+                    maxYIndex = newIndicesToOld[ii];
+                }
+            }
+
+            //printf("Add cut: [y=%d]", maxYIndex);
+            //for (int i = 0; i < (int)W.size(); i++) printf(" %d", W[i]);
+            //printf("\n");
+
+
+
+            SolverCut cut;
+            cut.setSense('L');
+            cut.setRHS(0);
+            for (unsigned i = 0; i < W.size()-1; i++) {
+                for (unsigned j = i+1; j < W.size(); j++) {
+                    int f1 = W[i] < W[j] ? W[i] : W[j];
+                    int f2 = W[i] < W[j] ? W[j] : W[i];
+                    cut.addCoef(solver->getColIndex(x + lex(f1) + "_" + lex(f2)), 1);
+                }
+            }
+            for (unsigned i = 0; i < W.size(); i++) {
+                if (W[i] != maxYIndex) cut.addCoef(solver->getColIndex(y + lex(W[i])), -1);
+            }
+            //printf("Cut evaluation: %.2f\n", cut.evaluate(sol));
+            if (cut.evaluate(sol) > TOLERANCE) cuts.push_back(cut);
+        }                 
+        callbackCutsTime += Util::getTime() - tempTime;
+    }
+    //////////////////
+    
+
+
+    callbackTime += Util::getTime() - startTime;
+    
+    //printf("\n");
+    return cuts;
 }

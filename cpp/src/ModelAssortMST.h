@@ -64,6 +64,9 @@ class ModelAssortMST : public Model {
 
         void setDebug(int d) { debug = d; }
 
+        // Separation algorithm
+        virtual vector<SolverCut> separationAlgorithm(vector<double> sol);
+
 
 };    
 
